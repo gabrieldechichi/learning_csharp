@@ -6,7 +6,7 @@ namespace GameEngine.Tests
 {
     public class PlayerCharacterShould : IDisposable
     {
-        PlayerCharacter player;
+        private readonly PlayerCharacter player;
         ITestOutputHelper outputHelper;
         public PlayerCharacterShould(ITestOutputHelper outputHelper)
         {
