@@ -17,4 +17,10 @@
     <ProjectReference Include="..\GameEngine\GameEngine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DataDrivenTests\TestData_HealthDamage.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

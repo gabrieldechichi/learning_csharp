@@ -9,7 +9,7 @@ namespace GameEngine.Tests.DataDrivenTests
     public class NonPlayerCharacterShould
     {
         [Theory]
-        [MemberData(nameof(TestData_HealthDamage.TestData), MemberType = typeof(TestData_HealthDamage))]
+        [MemberData(nameof(TestData_HealthDamageCSV.TestData), MemberType = typeof(TestData_HealthDamageCSV))]
         public void TakeDamage(int damage, int expectedHealth)
         {
             var player = new PlayerCharacter();

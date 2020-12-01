@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GameEngine.Tests.DataDrivenTests
 {
-    class TestData_HealthDamage
+    class TestData_HealthDamageInternal
     {
         public static IEnumerable<object[]> TestData
         {
