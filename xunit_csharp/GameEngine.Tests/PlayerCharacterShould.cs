@@ -1,3 +1,4 @@
+using GameEngine.Tests.DataDrivenTests;
 using System;
 using Xunit;
 using Xunit.Abstractions;
@@ -129,10 +130,7 @@ namespace GameEngine.Tests
         }
 
         [Theory]
-        [InlineData(0,100)]
-        [InlineData(1, 99)]
-        [InlineData(50, 50)]
-        [InlineData(1000, 1)]
+        [MemberData(nameof(TestData_HealthDamage.TestData), MemberType = typeof(TestData_HealthDamage))]
         public void TakeDamage(int damage, int expectedHealth)
         {
             player.TakeDamage(damage);
