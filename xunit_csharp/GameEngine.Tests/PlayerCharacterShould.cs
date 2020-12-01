@@ -95,5 +95,50 @@ namespace GameEngine.Tests
         }
         #endregion
 
+        #region DataDrivenTests
+        [Fact]
+        [Trait("Category", "Player_DataDriven")]
+        public void TakeZeroDamage()
+        {
+            player.TakeDamage(0);
+            Assert.Equal(100, player.Health);
+        }
+
+        [Fact]
+        [Trait("Category", "Player_DataDriven")]
+        public void TakeSmallAmoundOfDamage()
+        {
+            player.TakeDamage(1);
+            Assert.Equal(99, player.Health);
+        }
+
+        [Fact]
+        [Trait("Category", "Player_DataDriven")]
+        public void TakeMediumAmounOfDamage()
+        {
+            player.TakeDamage(50);
+            Assert.Equal(50, player.Health);
+        }
+
+        [Fact]
+        [Trait("Category", "Player_DataDriven")]
+        public void HaveMinimum1Health()
+        {
+            player.TakeDamage(1000);
+            Assert.Equal(1, player.Health);
+        }
+
+        [Theory]
+        [InlineData(0,100)]
+        [InlineData(1, 99)]
+        [InlineData(50, 50)]
+        [InlineData(1000, 1)]
+        public void TakeDamage(int damage, int expectedHealth)
+        {
+            player.TakeDamage(damage);
+            Assert.Equal(expectedHealth, player.Health);
+        }
+        #endregion
+
     }
 }
