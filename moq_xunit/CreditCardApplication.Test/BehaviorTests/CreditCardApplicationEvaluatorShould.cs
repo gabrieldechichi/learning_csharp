@@ -56,5 +56,31 @@ namespace CreditCardApplications.Test.BehaviorTests
 
             mockFrequentFlyerNumberValidator.Verify(x => x.IsValid(application.FrequentFlyerNumber), Times.Never);
         }
+
+        [Fact]
+        void CheckLicenseKeyForLowIncomeApplicants()
+        {
+            var application = CreditCardApplicationBuilder.New().WithLowIncome().Build();
+
+            sut.Evaluate(application);
+
+            mockFrequentFlyerNumberValidator.VerifyGet(x => x.ServiceInformation.LicenseData.LicenseKey, Times.Once);
+        }
+
+        [Fact]
+        void SetDetailedValidationModeForOlderApplicants()
+        {
+            var application = CreditCardApplicationBuilder.New().WithOldAge().Build();
+            sut.Evaluate(application);
+            mockFrequentFlyerNumberValidator.VerifySet(x => x.ValidationMode = ValidationMode.Detailed, Times.Once);
+        }
+
+        [Fact]
+        void SetQuickValidationModeForYoungApplicants()
+        {
+            var application = CreditCardApplicationBuilder.New().WithYoungAge().Build();
+            sut.Evaluate(application);
+            mockFrequentFlyerNumberValidator.VerifySet(x => x.ValidationMode = ValidationMode.Quick, Times.Once);
+        }
     }
 }
