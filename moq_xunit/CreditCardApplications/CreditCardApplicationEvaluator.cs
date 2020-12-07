@@ -48,10 +48,18 @@ namespace CreditCardApplications
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
 
-            var isFrequentFlyer = evaluateFrequentFlyerNumber(application.FrequentFlyerNumber);
-
-            if (!isFrequentFlyer)
+            try
             {
+                var isFrequentFlyer = evaluateFrequentFlyerNumber(application.FrequentFlyerNumber);
+
+                if (!isFrequentFlyer)
+                {
+                    return CreditCardApplicationDecision.ReferredToHuman;
+                }
+            }
+            catch (Exception)
+            {
+                //log
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
 

@@ -1,4 +1,5 @@
 using CreditCardApplications;
+using CreditCardApplications.Test.Core;
 using Moq;
 using System;
 using Xunit;
@@ -146,6 +147,18 @@ namespace CreditCardApplications.Test.StateTests
             sut.Evaluate(application);
 
             Assert.Equal(ValidationMode.Detailed, mockFrequentFlyerNumberValidator.Object.ValidationMode);
+        }
+
+        [Fact]
+        void ReferToHumanIfFrequentFlyerValidatorErrors()
+        {
+            mockFrequentFlyerNumberValidator.Setup(x => x.IsValid(It.IsAny<string>())).Throws<Exception>();
+
+            var application = CreditCardApplicationBuilder.New().WithLowIncome().WithFrequentFlyerNumber("1").Build();
+
+            var result = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, result);
         }
     }
 }
