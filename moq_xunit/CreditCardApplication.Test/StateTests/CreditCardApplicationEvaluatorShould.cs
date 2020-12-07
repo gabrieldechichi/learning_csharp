@@ -178,5 +178,27 @@ namespace CreditCardApplications.Test.StateTests
 
             Assert.Equal(1, sut.ValidatorLookupCount);
         }
+
+        [Fact]
+        void ReferToHumanWhenInvalidFrequentFlyerNumberAndAutoDeclineIfLowIncome()
+        {
+            mockFrequentFlyerNumberValidator
+                .SetupSequence(x => x.IsValid(It.IsAny<string>()))
+                .Returns(false)
+                .Returns(true);
+
+            var application = CreditCardApplicationBuilder.New()
+                .WithLowIncome()
+                .WithOldAge()
+                .Build();
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, sut.Evaluate(application));
+
+            mockFrequentFlyerNumberValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Once);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, sut.Evaluate(application));
+
+            mockFrequentFlyerNumberValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Exactly(2));
+        }
     }
 }
