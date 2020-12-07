@@ -43,6 +43,33 @@ namespace CreditCardApplications.Test.BehaviorTests
         }
 
         [Fact]
+        void AlwaysValidateFrequentFlyerNumberInApplication()
+        {
+            var application1 = CreditCardApplicationBuilder.New().WithLowIncome().WithFrequentFlyerNumber("1").Build();
+            var application2 = CreditCardApplicationBuilder.New().WithLowIncome().WithFrequentFlyerNumber("2").Build();
+            var application3 = CreditCardApplicationBuilder.New().WithLowIncome().WithFrequentFlyerNumber("3").Build();
+
+            var validateFrequentFlyerNumberPassedParams = new List<string>(3);
+            mockFrequentFlyerNumberValidator
+                .Setup(x => x.IsValid(Capture.In(validateFrequentFlyerNumberPassedParams)));
+
+            sut.Evaluate(application1);
+            sut.Evaluate(application2);
+            sut.Evaluate(application3);
+
+            mockFrequentFlyerNumberValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Exactly(3));
+
+            var expectedValidateFrequentFlyerNumberPassedParams = new List<string>()
+            {
+                application1.FrequentFlyerNumber,
+                application2.FrequentFlyerNumber,
+                application3.FrequentFlyerNumber
+            };
+
+            Assert.Equal(expectedValidateFrequentFlyerNumberPassedParams, validateFrequentFlyerNumberPassedParams);
+        }
+
+        [Fact]
         void NotValidateFrequentFlyerNumberForHighIncomeApplications()
         {
             var application = CreditCardApplicationBuilder
