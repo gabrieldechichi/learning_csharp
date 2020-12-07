@@ -103,5 +103,26 @@ namespace CreditCardApplications.Test
 
             Assert.Equal(CreditCardApplicationDecision.AutoDeclined, result);
         }
+
+        [Fact]
+        void ReferToHumanWhenLicenseIsExpired()
+        {
+            mockFrequentFlyerNumberValidator
+                .Setup(x => x.LicenseKey).Returns(IFrequentFlyerNumberValidator.LICENSEKEY_EXPIRED);
+
+            mockFrequentFlyerNumberValidator
+                .Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+
+            var application = new CreditCardApplication()
+            {
+                GrossAnnualIncome = 19_999,
+                Age = 42,
+                FrequentFlyerNumber = "x"
+            };
+
+            var result = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, result);
+        }
     }
 }

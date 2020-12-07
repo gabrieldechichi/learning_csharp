@@ -41,6 +41,11 @@ namespace CreditCardApplications
                 return CreditCardApplicationDecision.AutoAccepted;
             }
 
+            if (validator.LicenseKey == IFrequentFlyerNumberValidator.LICENSEKEY_EXPIRED)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
             var isFrequentFlyer = evaluateFrequentFlyerNumber(application.FrequentFlyerNumber);
 
             if (!isFrequentFlyer)
