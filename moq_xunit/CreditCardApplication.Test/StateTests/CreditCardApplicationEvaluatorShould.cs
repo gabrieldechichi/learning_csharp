@@ -220,5 +220,26 @@ namespace CreditCardApplications.Test.StateTests
 
             Assert.Equal(CreditCardApplicationDecision.ReferredToHumanFraudRisk, result);
         }
+
+        [Fact]
+        void DeclineLowIncomeApplicationLinkDemo()
+        {
+            IFrequentFlyerNumberValidator mockValidator = Mock.Of<IFrequentFlyerNumberValidator>
+                (
+                    validator =>
+                    validator.ServiceInformation.LicenseData.LicenseKey == "OK" &&
+                    validator.IsValid(It.IsAny<string>()) == true
+                );
+
+            FraudLookup mockFraudLookup = Mock.Of<FraudLookup>();
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator, mockFraudLookup);
+
+            var application = CreditCardApplicationBuilder.New().WithLowIncome().WithOldAge().Build();
+
+            var result = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, result);
+        }
     }
 }
