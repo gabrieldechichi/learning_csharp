@@ -8,8 +8,9 @@ namespace CreditCardApplications.Test.StateTests
 {
     public class CreditCardApplicationEvaluatorShould
     {
-        CreditCardApplicationEvaluator sut;
-        Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumberValidator;
+        readonly CreditCardApplicationEvaluator sut;
+        readonly Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumberValidator;
+        readonly Mock<FraudLookup> mockFraudLookup;
 
         public CreditCardApplicationEvaluatorShould()
         {
@@ -22,7 +23,9 @@ namespace CreditCardApplications.Test.StateTests
             //let's remember all properties
             mockFrequentFlyerNumberValidator.SetupAllProperties();
 
-            sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumberValidator.Object);
+            mockFraudLookup = new Mock<FraudLookup>();
+
+            sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumberValidator.Object, mockFraudLookup.Object);
         }
 
         [Fact]
@@ -199,6 +202,18 @@ namespace CreditCardApplications.Test.StateTests
             Assert.Equal(CreditCardApplicationDecision.AutoDeclined, sut.Evaluate(application));
 
             mockFrequentFlyerNumberValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        void ReferToHumanWhenFraudRisk()
+        {
+            mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>())).Returns(true);
+
+            var application = CreditCardApplicationBuilder.New().WithFraudRisk().Build();
+
+            var result = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHumanFraudRisk, result);
         }
     }
 }

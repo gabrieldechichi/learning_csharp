@@ -9,8 +9,9 @@ namespace CreditCardApplications.Test.BehaviorTests
 {
     public class CreditCardApplicationEvaluatorShould
     {
-        CreditCardApplicationEvaluator sut;
+        readonly CreditCardApplicationEvaluator sut;
         readonly Mock<IFrequentFlyerNumberValidator> mockFrequentFlyerNumberValidator;
+        readonly Mock<FraudLookup> mockFraudLookup;
 
         public CreditCardApplicationEvaluatorShould()
         {
@@ -23,7 +24,9 @@ namespace CreditCardApplications.Test.BehaviorTests
             //let's remember all properties
             mockFrequentFlyerNumberValidator.SetupAllProperties();
 
-            sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumberValidator.Object);
+            mockFraudLookup = new Mock<FraudLookup>();
+
+            sut = new CreditCardApplicationEvaluator(mockFrequentFlyerNumberValidator.Object, mockFraudLookup.Object);
         }
 
         [Fact]

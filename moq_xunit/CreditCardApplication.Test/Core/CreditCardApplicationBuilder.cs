@@ -18,6 +18,12 @@ namespace CreditCardApplications.Test.Core
             return new CreditCardApplicationBuilder();
         }
 
+        public CreditCardApplicationBuilder WithFraudRisk()
+        {
+            application.LastName = "Smith";
+            return this;
+        }
+
         public CreditCardApplicationBuilder WithLowIncome()
         {
             application.GrossAnnualIncome = 19_999;
