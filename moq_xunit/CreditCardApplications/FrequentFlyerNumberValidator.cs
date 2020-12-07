@@ -25,5 +25,10 @@ namespace CreditCardApplications
         {
             throw new NotImplementedException("Simulate this real dependency being hard to use");
         }
+
+        public bool IsValid(ref string frequentFlyerNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

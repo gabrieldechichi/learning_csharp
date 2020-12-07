@@ -1,4 +1,6 @@
-﻿namespace CreditCardApplications
+﻿using System;
+
+namespace CreditCardApplications
 {
     public class CreditCardApplicationEvaluator
     {
@@ -9,17 +11,37 @@
      
         public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator validator)
         {
-            this.validator = validator;
+            this.validator = validator ?? throw new System.ArgumentNullException($"Argument can't be null {nameof(validator)}");
         }
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
+        {
+            return EvaluateInternal(application, s => validator.IsValid(s));
+        }
+
+        public CreditCardApplicationDecision EvaluateUsingOut(CreditCardApplication application)
+        {
+            return EvaluateInternal(application, s => 
+            {
+                var result = false;
+                validator.IsValid(s, out result);
+                return result;
+            });
+        }
+
+        public CreditCardApplicationDecision EvaluateUsingRef(CreditCardApplication application)
+        {
+            return EvaluateInternal(application, s => validator.IsValid(ref s));
+        }
+
+        private CreditCardApplicationDecision EvaluateInternal(CreditCardApplication application, Func<string, bool> evaluateFrequentFlyerNumber)
         {
             if (application.GrossAnnualIncome >= HighIncomeThreshold)
             {
                 return CreditCardApplicationDecision.AutoAccepted;
             }
 
-            var isFrequentFlyer = validator.IsValid(application.FrequentFlyerNumber);
+            var isFrequentFlyer = evaluateFrequentFlyerNumber(application.FrequentFlyerNumber);
 
             if (!isFrequentFlyer)
             {
@@ -37,6 +59,6 @@
             }
 
             return CreditCardApplicationDecision.ReferredToHuman;
-        }       
+        }
     }
 }
