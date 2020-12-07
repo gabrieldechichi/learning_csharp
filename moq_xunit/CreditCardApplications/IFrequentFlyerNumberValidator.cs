@@ -2,15 +2,26 @@ using System;
 
 namespace CreditCardApplications
 {
-    public interface IFrequentFlyerNumberValidator
+    public interface ILicenseData
     {
         const string LICENSEKEY_EXPIRED = "EXPIRED";
+        string LicenseKey { get; }
+    }
 
+    public interface IServiceInformation
+    {
+        ILicenseData LicenseData { get; }
+    }
+
+    public interface IFrequentFlyerNumberValidator
+    {
         bool IsValid(string frequentFlyerNumber);
         void IsValid(string frequentFlyerNumber, out bool isValid);
 
         bool IsValid(ref string frequentFlyerNumber);
 
-        string LicenseKey { get; }
+        IServiceInformation ServiceInformation { get; }
+
+        ValidationMode ValidationMode { get; set; }
     }
 }

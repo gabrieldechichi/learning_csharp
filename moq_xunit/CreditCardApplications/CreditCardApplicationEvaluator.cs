@@ -41,7 +41,9 @@ namespace CreditCardApplications
                 return CreditCardApplicationDecision.AutoAccepted;
             }
 
-            if (validator.LicenseKey == IFrequentFlyerNumberValidator.LICENSEKEY_EXPIRED)
+            validator.ValidationMode = application.Age > 30 ? ValidationMode.Detailed : ValidationMode.Quick;
+
+            if (validator.ServiceInformation.LicenseData.LicenseKey == ILicenseData.LICENSEKEY_EXPIRED)
             {
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
