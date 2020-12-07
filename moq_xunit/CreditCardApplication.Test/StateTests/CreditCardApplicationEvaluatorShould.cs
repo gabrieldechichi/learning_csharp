@@ -1,6 +1,7 @@
 using CreditCardApplications;
 using CreditCardApplications.Test.Core;
 using Moq;
+using Moq.Protected;
 using System;
 using Xunit;
 
@@ -207,7 +208,11 @@ namespace CreditCardApplications.Test.StateTests
         [Fact]
         void ReferToHumanWhenFraudRisk()
         {
-            mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>())).Returns(true);
+            //We should avoid mocking protected members anyway
+            mockFraudLookup
+                .Protected()
+                .Setup<bool>("CheckApplicationForFraud", ItExpr.IsAny<CreditCardApplication>())
+                .Returns(true);
 
             var application = CreditCardApplicationBuilder.New().WithFraudRisk().Build();
 
