@@ -3,7 +3,7 @@ using Moq;
 using System;
 using Xunit;
 
-namespace CreditCardApplications.Test
+namespace CreditCardApplications.Test.StateTests
 {
     public class CreditCardApplicationEvaluatorShould
     {
