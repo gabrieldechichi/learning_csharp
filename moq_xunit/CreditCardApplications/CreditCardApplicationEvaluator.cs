@@ -8,10 +8,19 @@ namespace CreditCardApplications
         private const int AutoReferralMaxAge = 20;
         private const int HighIncomeThreshold = 100_000;
         private const int LowIncomeThreshold = 20_000;
+
+        public int ValidatorLookupCount { get; private set; }
      
         public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator validator)
         {
             this.validator = validator ?? throw new System.ArgumentNullException($"Argument can't be null {nameof(validator)}");
+            validator.ValidatorLookupPerformed += OnValidatorLookup;
+            ValidatorLookupCount = 0;
+        }
+
+        private void OnValidatorLookup(object sencer, EventArgs eventArgs)
+        {
+            ValidatorLookupCount++;
         }
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)

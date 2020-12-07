@@ -160,5 +160,23 @@ namespace CreditCardApplications.Test.StateTests
 
             Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, result);
         }
+
+        [Fact]
+        void IncrementValidatorLookupCount()
+        {
+            mockFrequentFlyerNumberValidator
+                .Setup(x => x.IsValid(It.IsAny<string>()))
+                .Returns(true)
+                .Raises(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+
+            //OR
+            //mockFrequentFlyerNumberValidator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+
+            var application = CreditCardApplicationBuilder.New().WithLowIncome().Build();
+
+            sut.Evaluate(application);
+
+            Assert.Equal(1, sut.ValidatorLookupCount);
+        }
     }
 }
