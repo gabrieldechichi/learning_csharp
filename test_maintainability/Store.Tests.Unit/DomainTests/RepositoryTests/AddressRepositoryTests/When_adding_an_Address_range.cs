@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Shouldly;
 using Store.Domain.Models;
 using Store.Tests.Unit.Framework;
+using Store.Tests.Unit.Framework.Mothers;
 
 namespace Store.Tests.Unit.DomainTests.RepositoryTests.AddressRepositoryTests
 {
@@ -10,7 +11,7 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.AddressRepositoryTests
     public class When_adding_an_Address_range : Given_an_AddressRepository
     {
         private List<Address> _models;
-        int _originalCount;
+        private int _originalCount;
 
         protected override void Given()
         {
@@ -18,22 +19,8 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.AddressRepositoryTests
 
             _models = new List<Address>
             {
-                new Address
-                {
-                    Line1 = GetRandom.String(),
-                    Line2 = GetRandom.String(),
-                    City = GetRandom.String(),
-                    StateId = 1,
-                    PostalCode = GetRandom.String(1,10)
-                },
-                new Address
-                {
-                    Line1 = GetRandom.String(),
-                    Line2 = GetRandom.String(),
-                    City = GetRandom.String(),
-                    StateId = 2,
-                    PostalCode = GetRandom.String(1,10)
-                }
+                AddressMother.Typical(),
+                AddressMother.JoeCustomerShippingAddress()
             };
 
             _originalCount = SUT.CountAsync().Result;
@@ -53,7 +40,7 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.AddressRepositoryTests
         }
 
         [Test]
-        public void Then_the_new_addresses_should_be_added_to_the_table()
+        public void Then_the_new_addresses_were_added_to_the_table()
         {
             SUT.CountAsync().Result.ShouldBe(_originalCount + _models.Count);
         }

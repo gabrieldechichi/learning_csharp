@@ -33,13 +33,13 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.StateRepositoryTests
         }
 
         [Test]
-        public void Then_the_new_addresses_should_have_an_Id()
+        public void Then_the_new_States_should_have_an_Id()
         {
             _models.ForEach(x => x.Id.ShouldBeGreaterThan(0));
         }
 
         [Test]
-        public void Then_the_new_addresses_should_be_added_to_the_table()
+        public void Then_the_new_States_were_added_to_the_table()
         {
             SUT.CountAsync().Result.ShouldBe(_originalCount + _models.Count);
         }
