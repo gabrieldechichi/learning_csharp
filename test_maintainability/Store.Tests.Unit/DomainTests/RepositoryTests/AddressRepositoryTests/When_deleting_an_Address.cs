@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Store.Domain.Models;
+using Store.Tests.Unit.Framework;
 
 namespace Store.Tests.Unit.DomainTests.RepositoryTests.AddressRepositoryTests
 {
@@ -14,11 +15,11 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.AddressRepositoryTests
 
             var model = new Address
             {
-                Line1 = "New Line 1",
-                Line2 = "New Line 2",
-                City = "New City",
+                Line1 = GetRandom.String(),
+                Line2 = GetRandom.String(),
+                City = GetRandom.String(),
                 StateId = 1,
-                PostalCode = "12345"
+                PostalCode = GetRandom.String(1, 10)
             };
 
             _model = SUT.AddAsync(AdminUserId, model).Result;

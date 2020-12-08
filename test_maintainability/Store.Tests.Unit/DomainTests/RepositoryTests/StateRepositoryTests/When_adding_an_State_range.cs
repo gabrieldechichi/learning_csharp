@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Shouldly;
 using Store.Domain.Models;
+using Store.Tests.Unit.Framework.Mothers;
 
 namespace Store.Tests.Unit.DomainTests.RepositoryTests.StateRepositoryTests
 {
@@ -9,6 +10,7 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.StateRepositoryTests
     public class When_adding_an_State_range : Given_a_StateRepository
     {
         private List<State> _models;
+        private int _originalCount;
 
         protected override void Given()
         {
@@ -16,21 +18,11 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.StateRepositoryTests
 
             _models = new List<State>
             {
-                new State
-                {
-                    CountryId = 1,
-                    Abbreviation = "YY",
-                    Name = "New State",
-                    Description = "Unexpected, but welcome"
-                },
-                new State
-                {
-                    CountryId = 1,
-                    Abbreviation = "ZZ",
-                    Name = "Newer State",
-                    Description = "Also unexpected, but welcome"
-                }
+                StateMother.Simple(),
+                StateMother.Simple()
             };
+
+            _originalCount = SUT.CountAsync().Result;
         }
 
         protected override void When()
@@ -41,9 +33,15 @@ namespace Store.Tests.Unit.DomainTests.RepositoryTests.StateRepositoryTests
         }
 
         [Test]
-        public void Then_the_new_address_should_have_an_Id()
+        public void Then_the_new_addresses_should_have_an_Id()
         {
-            SUT.CountAsync().Result.ShouldBe(71);
+            _models.ForEach(x => x.Id.ShouldBeGreaterThan(0));
+        }
+
+        [Test]
+        public void Then_the_new_addresses_should_be_added_to_the_table()
+        {
+            SUT.CountAsync().Result.ShouldBe(_originalCount + _models.Count);
         }
     }
 }
